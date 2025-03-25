@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>My first HTML Page</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/simpledotcss/simple.min.css"
+    />
+    <!-- <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" /> -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" /> -->
+  </head>
+
+  <body>
+    <header>
+      <h1>Page Heading</h1>
+      <nav>
+        <a href="/" class="current">Home</a>
+        <a href="/altair">Altair Demo</a>
+      </nav>
+    </header>
+    <main>
+      <img
+        src="https://www.nulondon.ac.uk/wp-content/uploads/2024/11/IMG_Fifth-floor-facilities.jpg"
+        alt="View from Portsoken"
+      />
+      <p>
+        Take a look at the MDN pages on
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Basic_HTML_syntax"
+          >basic HTML syntax</a
+        >,
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/How_to_structure_a_web_form"
+          >form structure</a
+        >
+        and
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/HTML5_input_types"
+          >HTML5 input types</a
+        >.
+      </p>
+      <p>
+        HTML tags are used to provide semantic meaning to content, each tag
+        represents a specific type of content or structure, helping users
+        understand the role and meaning of the content.
+      </p>
+
+      <ul>
+        <li>These are some bullet points</li>
+        <li>Each list item is enclosed</li>
+      </ul>
+
+      <ol>
+        <li>This is an ordered list</li>
+        <li>Each list item is enclosed</li>
+      </ol>
+
+      <section>
+        <h2>Form Example</h2>
+        <form action="/process" method="post">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="name@nulondon.ac.uk"
+          />
+
+          <label for="about">About</label>
+          <textarea
+            name="about"
+            id="about"
+            placeholder="I am a textarea..."
+          ></textarea>
+
+          <fieldset>
+            <legend>Choose a Language</legend>
+            <label>
+              <input type="radio" name="language" value="python" checked />
+              Python
+            </label>
+            <label>
+              <input type="radio" name="language" value="javascript" />
+              JavaScript
+            </label>
+            <label>
+              <input type="radio" name="language" value="rust" />
+              Rust
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Choose all the vegetables you like to eat</legend>
+
+            <label>
+              <input type="checkbox" name="vegetable" value="carrots" checked />
+              Carrots
+            </label>
+
+            <label>
+              <input type="checkbox" name="vegetable" value="peas" />
+              Peas
+            </label>
+
+            <label>
+              <input type="checkbox" name="vegetable" value="cabbage" />
+              Cabbage
+            </label>
+          </fieldset>
+
+          <label for="age"
+            >Enter your age:
+            <input
+              name="age"
+              type="range"
+              value="15"
+              min="1"
+              max="100"
+              oninput="this.nextElementSibling.value = this.value"
+            />
+            <output>15</output>
+          </label>
+
+          <label
+            >Select fruit:
+            <select id="fruit" name="fruit">
+              <option>Banana</option>
+              <option selected>Cherry</option>
+              <option>Lemon</option>
+            </select>
+          </label>
+
+          <br />
+
+          <div>
+            <input type="submit" value="Submit" />
+            <input type="reset" value="Reset" />
+          </div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

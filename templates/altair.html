@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Altair Charte</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/simpledotcss/simple.min.css"
+    />
+    <!-- <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" /> -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  </head>
+
+  <body>
+    <header>
+      <h1>Altair Chart</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/altair" class="current">Altair Demo</a>
+      </nav>
+    </header>
+    <main>
+      <pre><code>import altair as alt
+import pandas as pd
+
+data = pd.DataFrame({'a': list('CCCDDDEEE'),
+                     'b': [2, 7, 4, 1, 2, 6, 8, 4, 7]})
+
+chart = alt.Chart(data).mark_point().encode(
+    x='a',
+    y='b'
+)
+
+print(chart.to_json())</code></pre>
+
+      <p>
+        The <code>to_json()</code> method from Vega returns a JSON string that
+        can be rendered inside a HTML document using JavaScript that we loaded
+        in the head of the document.
+      </p>
+
+      <div id="vis"></div>
+      <script type="text/javascript">
+        var spec = {
+          $schema: "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+          config: {
+            view: {
+              continuousHeight: 300,
+              continuousWidth: 300,
+            },
+          },
+          data: {
+            name: "data-9b610f80003d046838adda5e50d859e9",
+          },
+          datasets: {
+            "data-9b610f80003d046838adda5e50d859e9": [
+              {
+                a: "C",
+                b: 2,
+              },
+              {
+                a: "C",
+                b: 7,
+              },
+              {
+                a: "C",
+                b: 4,
+              },
+              {
+                a: "D",
+                b: 1,
+              },
+              {
+                a: "D",
+                b: 2,
+              },
+              {
+                a: "D",
+                b: 6,
+              },
+              {
+                a: "E",
+                b: 8,
+              },
+              {
+                a: "E",
+                b: 4,
+              },
+              {
+                a: "E",
+                b: 7,
+              },
+            ],
+          },
+          encoding: {
+            x: {
+              field: "a",
+              type: "nominal",
+            },
+            y: {
+              field: "b",
+              type: "quantitative",
+            },
+          },
+          mark: {
+            type: "point",
+          },
+        };
+        var opt = { renderer: "canvas", actions: false };
+        vegaEmbed("#vis", spec, opt);
+      </script>
+    </main>
+  </body>
+</html>
