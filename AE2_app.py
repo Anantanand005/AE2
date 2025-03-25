@@ -1,45 +1,63 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 from sklearn.cluster import KMeans
-from sklearn.datasets import make_blobs
-import numpy as np
+from sklearn.preprocessing import StandardScaler
+import altair as alt
+import json
 
 app = Flask(__name__)
 
-# Generate some sample data and train a KMeans model for demonstration
-data, _ = make_blobs(n_samples=300, centers=4, cluster_std=0.60, random_state=0)
-model = KMeans(n_clusters=4)
-model.fit(data)
+# Assuming the data is preloaded and preprocessed
+df = pd.read_csv('diabetes.tab.tsv', sep='\t')
+df.rename(columns={'S1': 'TC', 'S2': 'LDL', 'S3': 'HDL', 'S4': 'TCH', 'S5': 'LTG', 'S6': 'GLU'}, inplace=True)
+features = ['AGE', 'SEX', 'BMI', 'BP', 'TC', 'LDL', 'HDL', 'TCH', 'LTG', 'GLU']
+X = df[features]
+y = df['Y']
+X.fillna(X.mean(), inplace=True)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
 
-@app.route('/predict', methods=['POST'])
+# Fit a Linear Regression model
+regressor = LinearRegression()
+regressor.fit(X_scaled, y)
+
+# Fit a KMeans clustering model
+kmeans = KMeans(n_clusters=4, random_state=42)
+kmeans.fit(X_scaled)
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route("/predict", methods=["POST"])
 def predict():
-    try:
-        # Extract data point from request
-        data_point = np.array([request.json['data']])
-        prediction = model.predict(data_point)
-        return jsonify({'cluster': int(prediction[0])})
-    except KeyError as e:
-        return jsonify({'error': f'Missing data for {str(e)}'}), 400
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    data = request.get_json()
+    input_data = scaler.transform([data['features']])
+    prediction = regressor.predict(input_data)
+    return jsonify({'prediction': prediction.tolist()})
 
-@app.route('/centres', methods=['GET'])
-def centres():
-    try:
-        centers = model.cluster_centers_
-        return jsonify({'cluster_centers': centers.tolist()})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+@app.route("/clusters", methods=["GET"])
+def clusters():
+    centers = kmeans.cluster_centers_
+    return jsonify({'cluster_centers': scaler.inverse_transform(centers).tolist()})
 
-@app.route('/data', methods=['GET'])
-def get_data():
-    try:
-        # Assuming 'data' is the entire dataset loaded into the model
-        df = pd.DataFrame(data, columns=['Feature1', 'Feature2'])
-        df['Cluster'] = model.labels_
-        return df.to_json(orient='records')
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+@app.route("/visualisation", methods=["GET"])
+def visualization():
+    chart_data = df.copy()
+    chart_data['Cluster'] = kmeans.labels_
+    chart = alt.Chart(chart_data).mark_point().encode(
+        x='BMI',
+        y='Y',
+        color='Cluster:N',
+        tooltip=['AGE', 'SEX', 'BMI', 'BP', 'Y']
+    ).interactive()
+    return render_template("chart.html", chart=chart.to_json())
 
-if __name__ == '__main__':
+@app.route("/hello")
+def hello():
+    return "<h1>Hello, Data Science World!</h1>"
+
+if __name__ == "__main__":
     app.run(debug=True)
