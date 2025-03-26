@@ -44,8 +44,8 @@ def get_diabetes():
     ]])
 
     prediction = prediction[0]
-    #return render_template("results.html", prediction=prediction, chart=chart.to_json())
-    return {"prediction": prediction}
+    #print({"prediction": prediction})
+    return render_template("results.html", prediction=prediction, chart=chart.to_json())
 
 features = ['AGE', 'SEX', 'BMI', 'BP', 'TC', 'LDL', 'HDL', 'TCH', 'LTG', 'GLU']
 
