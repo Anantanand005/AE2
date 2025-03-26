@@ -50,98 +50,51 @@
                 <!-- Input fields for 10 variables -->
                 <tr>
                     <td>AGE</td>
-                    <td><input type="number" id="AGE" required></td>
+                    <td><input type="number" name="AGE" required></td>
                 </tr>
                 <tr>
                     <td>SEX</td>
-                    <td><input type="number" id="SEX" required></td>
+                    <td><input type="number" name="SEX" required></td>
                 </tr>
                 <tr>
                     <td>BMI</td>
-                    <td><input type="number" id="BMI" required></td>
+                    <td><input type="number" name="BMI" required></td>
                 </tr>
                 <tr>
                     <td>BP</td>
-                    <td><input type="number" id="BP" required></td>
+                    <td><input type="number" name="BP" required></td>
                 </tr>
                 <tr>
                     <td>TC</td>
-                    <td><input type="number" id="TC" required></td>
+                    <td><input type="number" name="TC" required></td>
                 </tr>
                 <tr>
                     <td>LDL</td>
-                    <td><input type="number" id="LDL" required></td>
+                    <td><input type="number" name="LDL" required></td>
                 </tr>
                 <tr>
                     <td>HDL</td>
-                    <td><input type="number" id="HDL" required></td>
+                    <td><input type="number" name="HDL" required></td>
                 </tr>
                 <tr>
                     <td>TCH</td>
-                    <td><input type="number" id="TCH" required></td>
+                    <td><input type="number" name="TCH" required></td>
                 </tr>
                 <tr>
                     <td>LTG</td>
-                    <td><input type="number" id="LTG" required></td>
+                    <td><input type="number" name="LTG" required></td>
                 </tr>
                 <tr>
                     <td>GLU</td>
-                    <td><input type="number" id="GLU" required></td>
+                    <td><input type="number" name="GLU" required></td>
                 </tr>
             </table>
             
-            <button type="button" onclick="predictResults()">Predict</button>
+            <button type="submit">Predict</button>
         </form>
         
         <h3>Prediction Results</h3>
-        <p id="predictionOutput">Awaiting input...</p>
+        <p name="predictionOutput">Awaiting input...</p>
     </div>
-
-    <script>
-        // Function to collect input and make prediction request
-        function predictResults() {
-            // Collect input values from the form
-            const inputValues = {
-                "AGE": parseFloat(document.getElementById("AGE").value),
-                "SEX": parseFloat(document.getElementById("SEX").value),
-                "BMI": parseFloat(document.getElementById("BMI").value),
-                "BP": parseFloat(document.getElementById("BP").value),
-                "TC": parseFloat(document.getElementById("TC").value),
-                "LDL": parseFloat(document.getElementById("LDL").value),
-                "HDL": parseFloat(document.getElementById("HDL").value),
-                "TCH": parseFloat(document.getElementById("TCH").value),
-                "LTG": parseFloat(document.getElementById("LTG").value),
-                "GLU": parseFloat(document.getElementById("GLU").value)
-            };
-
-            // Check if any of the inputs are invalid (NaN)
-            for (const key in inputValues) {
-                if (isNaN(inputValues[key])) {
-                    document.getElementById("predictionOutput").innerText = `Please enter valid values for all fields.`;
-                    return;
-                }
-            }
-
-            // Send the data to the Flask server
-            fetch('http://127.0.0.1:5000/predict', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(inputValues)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.prediction) {
-                    // Display the prediction result
-                    document.getElementById("predictionOutput").innerText = `Predicted Disease Progression: ${data.prediction.toFixed(2)}`;
-                } else {
-                    document.getElementById("predictionOutput").innerText = "Prediction error: " + data.error;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById("predictionOutput").innerText = "An error occurred during prediction.";
-            });
-        }
-    </script>
 </body>
 </html>
