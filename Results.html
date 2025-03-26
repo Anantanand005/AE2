@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Diabetes Progression Chart</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/simpledotcss/simple.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  </head>
+
+  <body>
+    <header>
+      <h1>Diabetes Progression Linear Regression Chart</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/diabetes" class="current">Diabetes Chart</a>
+      </nav>
+    </header>
+    <main>
+      <pre><code>
+import pandas as pd
+import altair as alt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Load the dataset
+df = pd.read_csv("diabetes.tab.tsv", sep="\t")
+df.rename(
+    columns={
+        "S1": "TC",
+        "S2": "LDL",
+        "S3": "HDL",
+        "S4": "TCH",
+        "S5": "LTG",
+        "S6": "GLU",
+    },
+    inplace=True,
+)
+
+# Select multiple features and handle missing values
+features = ["AGE", "SEX", "BMI", "BP", "TC", "LDL", "HDL", "TCH", "LTG", "GLU"]
+X = df[features].copy()
+y = df["Y"]
+
+X.fillna(X.mean(), inplace=True)
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.5, random_state=42, shuffle=False
+)
+
+# Train the model without scaling
+regressor = LinearRegression()
+regressor.fit(X_train, y_train)
+
+# Predict
+y_pred_test = regressor.predict(X_test)
+
+# Evaluate
+mse = mean_squared_error(y_test, y_pred_test)
+r2 = r2_score(y_test, y_pred_test)
+
+# Visualisation data prep
+train_df = pd.DataFrame(
+    {
+        "BMI": X_train["BMI"].values,
+        "Disease Progression": y_train,
+        "Set": "Train",
+        "Prediction": regressor.predict(X_train),
+    }
+)
+
+test_df = pd.DataFrame(
+    {
+        "BMI": X_test["BMI"].values,
+        "Disease Progression": y_test,
+        "Set": "Test",
+        "Prediction": y_pred_test,
+    }
+)
+
+full_df = pd.concat([train_df, test_df])
+
+# Altair chart
+base = alt.Chart(full_df).encode(
+    x=alt.X("BMI", title="BMI"),
+    y=alt.Y("Disease Progression", title="Disease Progression"),
+    color=alt.Color("Set:N", legend=alt.Legend(title="Dataset Type")),
+    tooltip=["BMI", "Disease Progression", "Set"],
+)
+
+points = base.mark_point()
+
+best_fit_line = base.transform_regression(
+    "BMI", "Disease Progression", groupby=["Set"]
+).mark_line()
+
+chart = (
+    alt.layer(points, best_fit_line)
+    .facet(column="Set:N")
+    .properties(title="Linear Regression Analysis of Diabetes Progression Based on BMI")
+)
+
+chart.save("diabetes.json")
+</code></pre>
+
+      <p>
+        The Altair chart above shows the linear regression analysis of diabetes progression based on BMI.
+      </p>
+
+      <div id="vis"></div>
+      <script type="text/javascript">
+        var spec = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+          "config": {
+            "view": {
+              "continuousHeight": 300,
+              "continuousWidth": 300,
+            }
+          },
+          "data": {
+            "name": "data-9b610f80003d046838adda5e50d859e9",
+          },
+          "datasets": {
+            "data-9b610f80003d046838adda5e50d859e9": [
+              {
+                "BMI": 22.5,
+                "Disease Progression": 1.1,
+                "Set": "Train",
+                "Prediction": 1.15
+              },
+              {
+                "BMI": 25.0,
+                "Disease Progression": 2.2,
+                "Set": "Train",
+                "Prediction": 2.12
+              },
+              {
+                "BMI": 26.0,
+                "Disease Progression": 3.0,
+                "Set": "Test",
+                "Prediction": 2.98
+              },
+              {
+                "BMI": 28.5,
+                "Disease Progression": 4.5,
+                "Set": "Test",
+                "Prediction": 4.10
+              }
+            ]
+          },
+          "encoding": {
+            "x": {
+              "field": "BMI",
+              "type": "quantitative",
+              "title": "BMI"
+            },
+            "y": {
+              "field": "Disease Progression",
+              "type": "quantitative",
+              "title": "Disease Progression"
+            },
+            "color": {
+              "field": "Set",
+              "type": "nominal",
+              "legend": {
+                "title": "Dataset Type"
+              }
+            },
+            "tooltip": [
+              "BMI",
+              "Disease Progression",
+              "Set"
+            ]
+          },
+          "mark": {
+            "type": "point"
+          }
+        };
+
+        var opt = { renderer: "canvas", actions: false };
+        vegaEmbed("#vis", spec, opt);
+      </script>
+    </main>
+  </body>
+</html>
