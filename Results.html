@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Diabetes Progression Chart</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/simpledotcss/simple.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  </head>
+
+  <body>
+    <header>
+      <h1>Diabetes Progression Linear Regression Chart</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/diabetes" class="current">Diabetes Chart</a>
+      </nav>
+    </header>
+    <main>
+      <!-- The Python Flask placeholder to render the chart and prediction -->
+      <p>Your prediction result: {{ prediction }}</p>
+
+      <p>The Altair chart below shows the linear regression analysis of diabetes progression based on BMI, with a single line of best fit across the entire dataset.</p>
+
+      <!-- Chart container -->
+      <div id="vis"></div>
+
+      <script type="text/javascript">
+        // Spec for the Altair chart
+        var spec = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+          "config": {
+            "view": {
+              "continuousHeight": 300,
+              "continuousWidth": 300,
+            }
+          },
+          "data": {
+            "name": "data-9b610f80003d046838adda5e50d859e9",
+          },
+          "datasets": {
+            "data-9b610f80003d046838adda5e50d859e9": [
+              {
+                "BMI": 22.5,
+                "Disease Progression": 1.1,
+                "Set": "Train",
+                "Prediction": 1.15
+              },
+              {
+                "BMI": 25.0,
+                "Disease Progression": 2.2,
+                "Set": "Train",
+                "Prediction": 2.12
+              },
+              {
+                "BMI": 26.0,
+                "Disease Progression": 3.0,
+                "Set": "Test",
+                "Prediction": 2.98
+              },
+              {
+                "BMI": 28.5,
+                "Disease Progression": 4.5,
+                "Set": "Test",
+                "Prediction": 4.10
+              }
+            ]
+          },
+          "encoding": {
+            "x": {
+              "field": "BMI",
+              "type": "quantitative",
+              "title": "BMI"
+            },
+            "y": {
+              "field": "Disease Progression",
+              "type": "quantitative",
+              "title": "Disease Progression"
+            },
+            "color": {
+              "field": "Set",
+              "type": "nominal",
+              "legend": {
+                "title": "Dataset Type"
+              }
+            },
+            "tooltip": [
+              "BMI",
+              "Disease Progression",
+              "Set"
+            ]
+          },
+          "mark": {
+            "type": "point"
+          }
+        };
+
+        // Options for Vega Embed
+        var opt = { renderer: "canvas", actions: false };
+
+        // Render the chart
+        vegaEmbed("#vis", spec, opt);
+      </script>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        #predictionOutput {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Diabetes Prediction Model</h2>
+        <form id="predictionForm">
+            <table>
+                <tr>
+                    <th>Variable</th>
+                    <th>Value</th>
+                </tr>
+                
+                <!-- Input fields for 10 variables -->
+                <tr>
+                    <td>AGE</td>
+                    <td><input type="number" name="AGE" required></td>
+                </tr>
+                <tr>
+                    <td>SEX</td>
+                    <td><input type="number" name="SEX" required></td>
+                </tr>
+                <tr>
+                    <td>BMI</td>
+                    <td><input type="number" name="BMI" required></td>
+                </tr>
+                <tr>
+                    <td>BP</td>
+                    <td><input type="number" name="BP" required></td>
+                </tr>
+                <tr>
+                    <td>TC</td>
+                    <td><input type="number" name="TC" required></td>
+                </tr>
+                <tr>
+                    <td>LDL</td>
+                    <td><input type="number" name="LDL" required></td>
+                </tr>
+                <tr>
+                    <td>HDL</td>
+                    <td><input type="number" name="HDL" required></td>
+                </tr>
+                <tr>
+                    <td>TCH</td>
+                    <td><input type="number" name="TCH" required></td>
+                </tr>
+                <tr>
+                    <td>LTG</td>
+                    <td><input type="number" name="LTG" required></td>
+                </tr>
+                <tr>
+                    <td>GLU</td>
+                    <td><input type="number" name="GLU" required></td>
+                </tr>
+            </table>
+            
+            <button type="submit">Predict</button>
+        </form>
+        
+        <h3>Prediction Results</h3>
+        <p name="predictionOutput">Awaiting input...</p>
+    </div>
+</body>
+</html>

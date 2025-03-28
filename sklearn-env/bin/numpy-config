@@ -1,0 +1,10 @@
+#!/bin/sh
+'''exec' "/Users/gregzeeman2019mac/Desktop/NEU London/NEU London Year 2/NEU London Sem 4/APwD/AE2/sklearn-env/bin/python" "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from numpy._configtool import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())
